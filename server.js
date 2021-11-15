@@ -73,8 +73,9 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
  */
 const getJsonDate = (req,res,next) => {
   //regexp to check for letters and format
-  const regAlphaNum = new RegExp('[a-z]','gi');
-  const regDate = new RegExp('\\d\\d\\d\\d-\\d\\d-\\d\\d');
+  //const regAlphaNum = new RegExp('[a-z]','gi');
+  //const regDate = new RegExp('(\\d\\d\\d\\d-\\d\\d?-\\d\\d?)|([a-z]{3}%20\\d\\d?%20\\d\\d\\d\\d)','i');
+  console.log(new Date(req.params.date).toString());
   const date = req.params.date===undefined? undefined : (req.params.date || "date");
   //empty date
   if (date===undefined){
@@ -82,27 +83,30 @@ const getJsonDate = (req,res,next) => {
     return;
   }
   //invalid date
-  if (regAlphaNum.test(date)) {
-    res.json({ error : "Invalid Date" });
-    return;
+  if (isNaN(date)) {
+    if ((new Date(date)).toString() === 'Invalid Date' ) {
+      res.json({ error : "Invalid Date" });
+      return;
+    }
   }
 
   //for valid date
-  if (regDate.test(date) || !isNaN(date)) {
-    //get unix
-    const unix = Math.floor((new Date(date))/1) || date;
-    //get utc
-    let utc = new Date(date).toUTCString();
-    if (!isNaN(date)) utc = new Date(Number.parseInt(date)).toUTCString();
-    res.json({ unix: Number.parseInt(unix), utc: utc});
-    return;
-  }
+
+  //get unix
+  const unix = Math.floor((new Date(date))/1) || date;
+  //get utc
+  let utc = new Date(date).toUTCString();
+  //check if date is a number
+  if (!isNaN(date)) utc = new Date(Number.parseInt(date)).toUTCString();
+  res.json({ unix: Number.parseInt(unix), utc: utc});
+  return;
+
   //invalid format
   res.json({ error : "Invalid Date" });
 }
 
 const jsonDate = (req,res) => {
-   res.json( { unix : Math.floor((new Date(Date.now())/1)), utc : new Date(Date.now()).toUTCString() });
+   res.json( { unix: Math.floor((new Date(Date.now())/1)), utc: new Date(Date.now()).toUTCString() });
 }
 
 
