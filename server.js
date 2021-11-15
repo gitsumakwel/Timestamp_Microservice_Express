@@ -55,6 +55,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 *      parameters:
 *        - in: path
 *          name: date
+*          required: true
 *          description: input date yyyy-mm-dd or unix 13-digit
 *          schema:
 *            type: string
@@ -75,22 +76,25 @@ const getJsonDate = (req,res,next) => {
   //regexp to check for letters and format
   //const regAlphaNum = new RegExp('[a-z]','gi');
   //const regDate = new RegExp('(\\d\\d\\d\\d-\\d\\d?-\\d\\d?)|([a-z]{3}%20\\d\\d?%20\\d\\d\\d\\d)','i');
-  console.log(new Date(req.params.date).toString());
-  const date = req.params.date===undefined? undefined : (req.params.date || "date");
+
+  const date = req.params.date===undefined? undefined : req.params.date;
   //empty date
   if (date===undefined){
     res.json( { unix : Math.floor((new Date(Date.now())/1)), utc : new Date(Date.now()).toUTCString() });
     return;
   }
   //invalid date
-  if (isNaN(date)) {
-    if ((new Date(date)).toString() === 'Invalid Date' ) {
+  const testdate = new Date(date).toString();
+
+  if (isNaN(date) || / (?!=\\d)/.test(date)) {
+    if (testdate === 'Invalid Date' || testdate === 'null') {
       res.json({ error : "Invalid Date" });
       return;
     }
   }
 
   //for valid date
+
   //get unix
   const unix = Math.floor((new Date(date))/1) || date;
   //get utc
@@ -141,7 +145,7 @@ app.get("/", function (req, res) {
 app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
-app.route('/api/undefined').get(jsonDate).post(jsonDate);
+//app.route('/api/undefined').get(jsonDate).post(jsonDate);
 app.route('/api/:date?').get(getJsonDate);
 
 // listen for requests :)
