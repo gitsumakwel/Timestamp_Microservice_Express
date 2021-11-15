@@ -91,7 +91,6 @@ const getJsonDate = (req,res,next) => {
   }
 
   //for valid date
-
   //get unix
   const unix = Math.floor((new Date(date))/1) || date;
   //get utc
