@@ -55,7 +55,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 *      parameters:
 *        - in: path
 *          name: date
-*          description: input date yyyy-mm-dd or unix 10-digit
+*          description: input date yyyy-mm-dd or unix 13-digit
 *          schema:
 *            type: string
 *      responses:
