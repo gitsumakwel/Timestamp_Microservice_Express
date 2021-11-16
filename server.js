@@ -46,6 +46,24 @@ const swaggerOptions = {
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
+/**
+ * @swagger
+*  /api/:
+*    get:
+*      description: Date in unix and utc
+*      responses:
+*        '200':
+*          description: Success
+*          content:
+*            application/json; charset=utf-8:
+*              schema:
+*                type: string
+*              examples: {}
+*      servers:
+*        - url: https://boilerplate-project-timestamp.gitsumakwel.repl.co
+*    servers:
+*      - url: https://boilerplate-project-timestamp.gitsumakwel.repl.co
+ */
 
 /**
  * @swagger
@@ -55,7 +73,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 *      parameters:
 *        - in: path
 *          name: date
-*          required: true
+*          required: false
 *          description: input date yyyy-mm-dd or unix 13-digit
 *          schema:
 *            type: string
